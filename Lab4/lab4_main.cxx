@@ -1,72 +1,133 @@
-/*
+//*
 #include <SFML/Graphics.hpp>
+#include <iostream>
+#include <list>
 using namespace sf;
 
-const int num=8; //checkpoints
-int points[num][2] = {300, 610,
-                      1270,430,
-                      1380,2380,
-                      1900,2460,
-                      1970,1700,
-                      2550,1680,
-                      2560,3150,
-                      500, 3300};
+float DEGTORAD = 0.017453f;
+const int W = 1200;
+const int H = 800;
 
-struct Car
+class Entity{
+public:
+    float x,y,R,angle;
+    int life;
+    std::string name;
+    Sprite sprite;
+
+    Entity(){
+        life=100;
+    }
+
+    void settings(int X,int Y,float Angle=0,int radius=1){
+        x=X; y=Y;
+        angle = Angle;
+        R = radius;
+    }
+
+virtual void update(){};
+
+void draw(RenderWindow &app)
 {
-  float x,y,speed,angle; int n;
+    sprite.setPosition(x,y);
+    sprite.setRotation(angle/DEGTORAD);
 
-  Car() {speed=2; angle=0; n=0;}
+    //sprite.setRotation(angle+90);
+    app.draw(sprite);
+}
 
-  void move()
-   {
-    x += sin(angle) * speed;
-    y -= cos(angle) * speed;
-   }
-
-  void findTarget()
-  {
-    float tx=points[n][0];
-    float ty=points[n][1];
-    float beta = angle-atan2(tx-x,-ty+y);
-    if (sin(beta)<0) angle+=0.005*speed; else angle-=0.005*speed;
-    if ((x-tx)*(x-tx)+(y-ty)*(y-ty)<25*25) n=(n+1)%num;
-   }
+virtual ~Entity(){};
 };
+
+class Bullet: public Entity
+{
+public:
+  Bullet()
+  {
+    name="bullet";
+  }
+
+void  update()
+  {
+    //x+=cos(angle*DEGTORAD)*6;
+    //y+=sin(angle*DEGTORAD)*6;
+    x += sin(angle) * 6;
+    y -= cos(angle) * 6;
+
+   if (x>W || x<0 || y>H || y<0) life=0;
+  }
+
+};
+
+
+class Car: public Entity{
+    public:
+    float speed;
+    bool Up=0,Right=0,Down=0,Left=0;
+    Car(){
+        speed=2;
+        R=22;
+        name="player";
+        sprite.setOrigin(R, R);
+    }
+
+    void update(){
+        float maxSpeed=10.0;
+        float acc=0.2, dec=0.3;
+        float turnSpeed=0.08;
+        if (Up && speed<maxSpeed)
+            if (speed < 0)  speed += dec;
+            else  speed += acc;
+
+        if (Down && speed>-maxSpeed)
+            if (speed > 0) speed -= dec;
+            else  speed -= acc;
+
+        if (!Up && !Down)
+            if (speed - dec > 0) speed -= dec;
+            else if (speed + dec < 0) speed += dec;
+            else speed = 0;
+
+        if (Right && speed!=0)  angle += turnSpeed * speed/maxSpeed;
+        if (Left && speed!=0)   angle -= turnSpeed * speed/maxSpeed;
+        x += sin(angle) * speed;
+        y -= cos(angle) * speed;
+        if (x>W) x=0;  if (x<0) x=W;
+        if (y>H) y=0;  if (y<0) y=H;
+    }
+};
+
+bool isCollide(Entity *a,Entity *b)
+{
+  return (b->x - a->x)*(b->x - a->x)+
+         (b->y - a->y)*(b->y - a->y)<
+         (a->R + b->R)*(a->R + b->R);
+}
+
 
 
 int main()
 {
-    RenderWindow app(VideoMode(640, 480), "Car Racing Game!");
+    RenderWindow app(VideoMode(W, H), "Car Racing Game!");
 	app.setFramerateLimit(60);
 
-    Texture t1,t2,t3;
-    t1.loadFromFile("images/background.png");
-    t2.loadFromFile("images/myspaceship.png");
+    Texture t0;
+    t0.loadFromFile("images/background.png");
+    t0.setSmooth(true);
+    Sprite sBackground(t0);
+
+    std::list<Entity*> entities;
+
+    Car *car1 = new Car();
+    car1->settings(300,100,0,22);
+    entities.push_back(car1);
+    Texture t1, t2,t3;
     t1.setSmooth(true);
     t2.setSmooth(true);
-
-    Sprite sBackground(t1), sCar(t2);
-    sBackground.scale(2,2);
-
-    sCar.setOrigin(22, 22);
-    float R=22;
-
-    const int N=5;
-    Car car[N];
-    for(int i=0;i<N;i++)
-    {
-      car[i].x=300+i*50;
-      car[i].y=1700+i*80;
-      car[i].speed=7+i;
-    }
-
-   float speed=0,angle=0;
-   float maxSpeed=12.0;
-   float acc=0.2, dec=0.3;
-   float turnSpeed=0.08;
-
-   int offsetX=0,offsetY=0;
+    t3.setSmooth(true);
+    t1.loadFromFile("images/car.png");
+    t2.loadFromFile("images/fire_red.png");
+    car1->sprite.setTexture(t1);
 
     while (app.isOpen())
     {
@@ -75,82 +136,83 @@ int main()
         {
             if (e.type == Event::Closed)
                 app.close();
+            if (e.type == Event::KeyPressed)
+             if (e.key.code == Keyboard::Space)
+              {
+                Bullet *b = new Bullet();
+                b->settings(car1->x+sin(car1->angle)*car1->R,car1->y-cos(car1->angle)*car1->R,car1->angle,10);
+                b->sprite.setTexture(t2);
+                entities.push_back(b);
+              }
         }
 
-    bool Up=0,Right=0,Down=0,Left=0;
-    if (Keyboard::isKeyPressed(Keyboard::Up)) Up=1;
-    if (Keyboard::isKeyPressed(Keyboard::Right)) Right=1;
-    if (Keyboard::isKeyPressed(Keyboard::Down)) Down=1;
-    if (Keyboard::isKeyPressed(Keyboard::Left)) Left=1;
+    if (Keyboard::isKeyPressed(Keyboard::W)) car1->Up=1;
+    else car1->Up=0;
+    if (Keyboard::isKeyPressed(Keyboard::D)) car1->Right=1;
+    else car1->Right=0;
+    if (Keyboard::isKeyPressed(Keyboard::S)) car1->Down=1;
+    else car1->Down=0;
+    if (Keyboard::isKeyPressed(Keyboard::A)) car1->Left=1;
+    else car1->Left=0;
 
-    //car movement
-    if (Up && speed<maxSpeed)
-        if (speed < 0)  speed += dec;
-        else  speed += acc;
 
-    if (Down && speed>-maxSpeed)
-        if (speed > 0) speed -= dec;
-        else  speed -= acc;
 
-    if (!Up && !Down)
-        if (speed - dec > 0) speed -= dec;
-        else if (speed + dec < 0) speed += dec;
-        else speed = 0;
+	//car1->update();
+    //app.clear(Color::White);
+    //app->draw(sBackground);
+    //car->draw(app);
+    //app.display();
+    //std::cout<<car1->angle<<std::endl;
 
-    if (Right && speed!=0)  angle += turnSpeed * speed/maxSpeed;
-    if (Left && speed!=0)   angle -= turnSpeed * speed/maxSpeed;
 
-    car[0].speed = speed;
-    car[0].angle = angle;
 
-	for(int i=0;i<N;i++) car[i].move();
-	for(int i=1;i<N;i++) car[i].findTarget();
 
-    //collision
-    for(int i=0;i<N;i++)
-    for(int j=0;j<N;j++)
+
+
+for(auto i=entities.begin();i!=entities.end();)
     {
-		int dx=0, dy=0;
-        while (dx*dx+dy*dy<4*R*R)
-         {
-           car[i].x+=dx/10.0;
-           car[i].x+=dy/10.0;
-           car[j].x-=dx/10.0;
-           car[j].y-=dy/10.0;
-		   dx = car[i].x-car[j].x;
-           dy = car[i].y-car[j].y;
-		   if (!dx && !dy) break;
-         }
+      Entity *e = *i;
+
+      e->update();
+
+      if (e->life==0) {i=entities.erase(i); delete e;}
+      else i++;
     }
 
 
-    app.clear(Color::White);
 
-    if (car[0].x>320) offsetX = car[0].x-320;
-    if (car[0].y>240) offsetY = car[0].y-240;
+   //////draw//////
+   app.draw(sBackground);
 
-    sBackground.setPosition(-offsetX,-offsetY);
-    app.draw(sBackground);
+   for(auto i:entities)
+     i->draw(app);
 
-    Color colors[10] = {Color::Red, Color::Green, Color::Magenta, Color::Blue, Color::White};
+CircleShape circle(3);
+  circle.setFillColor(Color(255,0,0,170));
+  circle.setPosition(car1->x,car1->y);
+  circle.setOrigin(3,3);
+  app.draw(circle);
 
-    for(int i=0;i<N;i++)
-    {
-      sCar.setPosition(car[i].x-offsetX,car[i].y-offsetY);
-      sCar.setRotation(car[i].angle*180/3.141593);
-      sCar.setColor(colors[i]);
-      app.draw(sCar);
-    }
+   app.display();
 
-    app.display();
+
+
+
+
+
+
+
+
+
+
     }
 
     return 0;
-}
-//*/
-//*
+}//*/
+
+/*
 #include <SFML/Graphics.hpp>
-#include <ctime>
+#include <time.h>
 #include <list>
 using namespace sf;
 
@@ -159,7 +221,8 @@ const int H = 800;
 
 float DEGTORAD = 0.017453f;
 
-class Animation{
+class Animation
+{
 public:
 	float Frame, speed;
 	Sprite sprite;
@@ -332,7 +395,7 @@ int main()
     RenderWindow app(VideoMode(W, H), "Asteroids!");
     app.setFramerateLimit(60);
 
-    Texture t1,t2,t4,t5,t6;
+    Texture t1,t2,t3,t4,t5,t6,t7;
     t1.loadFromFile("images/spaceship.png");
     t2.loadFromFile("images/background.jpg");
     t4.loadFromFile("images/rock.png");
@@ -349,7 +412,6 @@ int main()
     Animation sBullet(t5, 0,0,32,64, 16, 0.8);
     Animation sPlayer(t1, 40,0,40,40, 1, 0);
     Animation sPlayer_go(t1, 40,40,40,40, 1, 0);
-
 
 
     std::list<Entity*> entities;
@@ -468,5 +530,6 @@ int main()
 
     return 0;
 }
-
 //*/
+
+
