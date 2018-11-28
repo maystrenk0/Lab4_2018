@@ -10,7 +10,7 @@ const int H = 800;
 
 class Entity{
 public:
-    float x,y,R,angle;
+    float x,y,R,angle, speed;
     int life;
     std::string name;
     Sprite sprite;
@@ -45,14 +45,17 @@ public:
   Bullet()
   {
     name="bullet";
+    speed = 6;
+    R=16;
+    sprite.setOrigin(R, R);
   }
 
 void  update()
   {
     //x+=cos(angle*DEGTORAD)*6;
     //y+=sin(angle*DEGTORAD)*6;
-    x += sin(angle) * 6;
-    y -= cos(angle) * 6;
+    x += sin(angle) * speed;
+    y -= cos(angle) * speed;
 
    if (x>W || x<0 || y>H || y<0) life=0;
   }
@@ -62,7 +65,6 @@ void  update()
 
 class Car: public Entity{
     public:
-    float speed;
     bool Up=0,Right=0,Down=0,Left=0;
     Car(){
         speed=2;
@@ -140,7 +142,7 @@ int main()
              if (e.key.code == Keyboard::Space)
               {
                 Bullet *b = new Bullet();
-                b->settings(car1->x+sin(car1->angle)*car1->R,car1->y-cos(car1->angle)*car1->R,car1->angle,10);
+                b->settings(car1->x,car1->y,car1->angle,16);
                 b->sprite.setTexture(t2);
                 entities.push_back(b);
               }
@@ -156,13 +158,6 @@ int main()
     else car1->Left=0;
 
 
-
-	//car1->update();
-    //app.clear(Color::White);
-    //app->draw(sBackground);
-    //car->draw(app);
-    //app.display();
-    //std::cout<<car1->angle<<std::endl;
 
 
 
@@ -187,11 +182,7 @@ for(auto i=entities.begin();i!=entities.end();)
    for(auto i:entities)
      i->draw(app);
 
-CircleShape circle(3);
-  circle.setFillColor(Color(255,0,0,170));
-  circle.setPosition(car1->x,car1->y);
-  circle.setOrigin(3,3);
-  app.draw(circle);
+
 
    app.display();
 
