@@ -208,14 +208,37 @@ for(auto i=entities.begin();i!=entities.end();){
       else i++;
     }
 
+sf::RectangleShape rectangle0;
+rectangle0.setSize(sf::Vector2f(70, 7));
+rectangle0.setOrigin(sf::Vector2f(35, 3.5));
+rectangle0.setFillColor(Color::Red);
+rectangle0.setPosition(player1->x, player1->y-1.5*player1->R);
+sf::RectangleShape rectangle1;
+rectangle1.setSize(sf::Vector2f(0.7*player1->life, 7));
+rectangle1.setOrigin(sf::Vector2f(35, 3.5));
+rectangle1.setFillColor(Color::Green);
+rectangle1.setPosition(player1->x, player1->y-1.5*player1->R);
 
+sf::RectangleShape rectangle01;
+rectangle01.setSize(sf::Vector2f(70, 7));
+rectangle01.setOrigin(sf::Vector2f(35, 3.5));
+rectangle01.setFillColor(Color::Red);
+rectangle01.setPosition(player2->x, player2->y-1.5*player2->R);
+sf::RectangleShape rectangle11;
+rectangle11.setSize(sf::Vector2f(0.7*player2->life, 7));
+rectangle11.setOrigin(sf::Vector2f(35, 3.5));
+rectangle11.setFillColor(Color::Green);
+rectangle11.setPosition(player2->x, player2->y-1.5*player2->R);
 
    //////draw//////
    app.draw(sBackground);
 
    for(auto i:entities)
      i->draw(app);
-
+app.draw(rectangle0);
+app.draw(rectangle1);
+app.draw(rectangle01);
+app.draw(rectangle11);
 
 
    app.display();

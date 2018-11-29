@@ -414,7 +414,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1543488467 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_main.cxx
+1543489343 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_main.cxx
 	<SFML/Graphics.hpp>
 	<iostream>
 	<list>
