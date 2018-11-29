@@ -19,6 +19,7 @@
 					<Add library="sfml-graphics-d" />
 					<Add library="sfml-window-d" />
 					<Add library="sfml-system-d" />
+					<Add library="sfml-network-d" />
 					<Add directory="C:/Tools/SFML-2.5.0/lib" />
 				</Linker>
 			</Target>
