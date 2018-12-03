@@ -39,7 +39,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="lab4_bullet.cxx" />
+		<Unit filename="lab4_bullet.hxx" />
+		<Unit filename="lab4_entity.cxx" />
+		<Unit filename="lab4_entity.hxx" />
 		<Unit filename="lab4_main.cxx" />
+		<Unit filename="lab4_parameters.hxx" />
+		<Unit filename="lab4_player.cxx" />
+		<Unit filename="lab4_player.hxx" />
 		<Extensions>
 			<code_completion />
 			<envvars />
