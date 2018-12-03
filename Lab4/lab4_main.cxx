@@ -96,6 +96,22 @@ int main(){
             else i++;
         }
 
+        for(auto a:entities)
+            for(auto b:entities){
+                if (a->name=="player" && b->name=="player"){
+                    int dx=0, dy=0;
+                    while (dx*dx+dy*dy<4*a->r*a->r){
+                        a->x += dx/10.0;
+                        a->y += dy/10.0;
+                        b->x -= dx/10.0;
+                        b->y -= dy/10.0;
+                        dx = a->x - b->x;
+                        dy = a->y - b->y;
+                        if (!dx && !dy) break;
+                    }
+                }
+            }
+
         sf::RectangleShape rectangle0;
         rectangle0.setSize(sf::Vector2f(70, 7));
         rectangle0.setOrigin(sf::Vector2f(35, 3.5));
