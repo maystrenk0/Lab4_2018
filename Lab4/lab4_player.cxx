@@ -3,8 +3,8 @@
 #include "lab4_parameters.hxx"
 
 sf::Color colors[10] = {sf::Color::White,
-                        sf::Color::Red,
-                        sf::Color::Blue,
+                        sf::Color(255, 31, 31),
+                        sf::Color(31, 31, 255),
                         sf::Color::Green,
                         sf::Color::Magenta};
 

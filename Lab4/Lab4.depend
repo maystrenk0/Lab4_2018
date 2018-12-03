@@ -414,7 +414,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1543861456 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_main.cxx
+1543862281 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_main.cxx
 	<iostream>
 	<list>
 	<SFML/Graphics.hpp>
@@ -518,7 +518,7 @@
 	"lab4_bullet.hxx"
 	"lab4_parameters.hxx"
 
-1543860396 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_player.cxx
+1543862715 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_player.cxx
 	<SFML/Graphics.hpp>
 	"lab4_player.hxx"
 	"lab4_parameters.hxx"

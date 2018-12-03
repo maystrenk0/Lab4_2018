@@ -30,7 +30,7 @@ int main(){
     t[0].setSmooth(true);
     t[1].setSmooth(true);
     t[2].setSmooth(true);
-    t[0].loadFromFile("images/car.png");
+    t[0].loadFromFile("images/spaceship.png");
     t[1].loadFromFile("images/fire_red.png");
     t[2].loadFromFile("images/fire_blue.png");
     player1->sprite.setTexture(t[0]);
