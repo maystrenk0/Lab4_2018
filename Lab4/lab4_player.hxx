@@ -15,6 +15,7 @@ public:
     Player(int n0);
 
     void update();
+    void drawHP(sf::RenderWindow &app);
 };
 
 #endif // LAB4_PLAYER_HXX_INCLUDED

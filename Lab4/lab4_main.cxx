@@ -96,51 +96,23 @@ int main(){
             else i++;
         }
 
-        for(auto a:entities)
-            for(auto b:entities){
-                if (a->name=="player" && b->name=="player"){
-                    int dx=0, dy=0;
-                    while (dx*dx+dy*dy<4*a->r*a->r){
-                        a->x += dx/10.0;
-                        a->y += dy/10.0;
-                        b->x -= dx/10.0;
-                        b->y -= dy/10.0;
-                        dx = a->x - b->x;
-                        dy = a->y - b->y;
-                        if (!dx && !dy) break;
-                    }
-                }
-            }
+        int dx=0, dy=0;
+        while (dx*dx+dy*dy<4*player1->r*player1->r){
+            player1->x += dx/10.0;
+            player1->y += dy/10.0;
+            player2->x -= dx/10.0;
+            player2->y -= dy/10.0;
+            dx = player1->x - player2->x;
+            dy = player1->y - player2->y;
+            if (!dx && !dy) break;
+        }
 
-        sf::RectangleShape rectangle0;
-        rectangle0.setSize(sf::Vector2f(70, 7));
-        rectangle0.setOrigin(sf::Vector2f(35, 3.5));
-        rectangle0.setFillColor(Color::Red);
-        rectangle0.setPosition(player1->x, player1->y-1.5*player1->r);
-        sf::RectangleShape rectangle1;
-        rectangle1.setSize(sf::Vector2f(0.7*player1->life, 7));
-        rectangle1.setOrigin(sf::Vector2f(35, 3.5));
-        rectangle1.setFillColor(Color::Green);
-        rectangle1.setPosition(player1->x, player1->y-1.5*player1->r);
-
-        sf::RectangleShape rectangle01;
-        rectangle01.setSize(sf::Vector2f(70, 7));
-        rectangle01.setOrigin(sf::Vector2f(35, 3.5));
-        rectangle01.setFillColor(Color::Red);
-        rectangle01.setPosition(player2->x, player2->y-1.5*player2->r);
-        sf::RectangleShape rectangle11;
-        rectangle11.setSize(sf::Vector2f(0.7*player2->life, 7));
-        rectangle11.setOrigin(sf::Vector2f(35, 3.5));
-        rectangle11.setFillColor(Color::Green);
-        rectangle11.setPosition(player2->x, player2->y-1.5*player2->r);
 
         app.draw(sBackground);
         for(auto i:entities)
             i->draw(app);
-        app.draw(rectangle0);
-        app.draw(rectangle1);
-        app.draw(rectangle01);
-        app.draw(rectangle11);
+        player1->drawHP(app);
+        player2->drawHP(app);
 
         app.display();
     }
