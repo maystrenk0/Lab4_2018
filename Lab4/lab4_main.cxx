@@ -2,6 +2,7 @@
 #include <list>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
+#include <SFML/Audio.hpp>
 #include "lab4_entity.hxx"
 #include "lab4_bullet.hxx"
 #include "lab4_player.hxx"
@@ -26,6 +27,11 @@ int main(){
 
     RenderWindow app(VideoMode(width, height), "Lab4 SERVER");
 	app.setFramerateLimit(60);
+
+	Music music;
+    if (!music.openFromFile("music.wav"))
+        return -1;
+    music.play();
 
     Texture t0;
     t0.loadFromFile("images/background.png");
