@@ -414,7 +414,7 @@
 	<SFML/Graphics/Drawable.hpp>
 	<SFML/Window/GlResource.hpp>
 
-1543862281 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_main.cxx
+1544014777 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_main.cxx
 	<iostream>
 	<list>
 	<SFML/Graphics.hpp>
@@ -499,13 +499,13 @@
 	<SFML/Network/IpAddress.hpp>
 	<vector>
 
-1543860256 c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_entity.hxx
+1544013430 c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_entity.hxx
 	<SFML/Graphics.hpp>
 	<cstring>
 
 1543858173 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_parameters.cxx
 
-1543859745 c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_parameters.hxx
+1543946916 c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_parameters.hxx
 
 1543860247 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_entity.cxx
 	"lab4_entity.hxx"
@@ -518,7 +518,7 @@
 	"lab4_bullet.hxx"
 	"lab4_parameters.hxx"
 
-1543941970 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_player.cxx
+1544013430 source:c:\users\alexander\desktop\cpp\2019\lab4_2018\lab4\lab4_player.cxx
 	<SFML/Graphics.hpp>
 	"lab4_player.hxx"
 	"lab4_parameters.hxx"

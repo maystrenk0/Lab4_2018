@@ -6,7 +6,7 @@
 class Entity{
 public:
     float x, y, r, angle, speed = 0;
-    int life = 100, n;
+    int life = 1000, n;
     std::string name;
     sf::Sprite sprite;
 

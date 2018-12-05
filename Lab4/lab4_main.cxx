@@ -10,7 +10,18 @@
 using namespace sf;
 
 int main(){
-    RenderWindow app(VideoMode(width, height), "Lab4");
+    TcpListener listener;
+    if(listener.listen(65065) != Socket::Done)
+        std::cout << "Listen failed!" << std::endl;
+
+    TcpSocket client;
+    if (listener.accept(client) != Socket::Done)
+        std::cout << "Accept failed!" << std::endl;
+    size_t bytesRead = 0;
+    char buffer[100] = {};
+    std::string data = "Server message";
+
+    RenderWindow app(VideoMode(width, height), "Lab4 SERVER");
 	app.setFramerateLimit(60);
 
     Texture t0;
@@ -21,10 +32,10 @@ int main(){
     std::list<Entity*> entities;
 
     Player *player1 = new Player(1);
-    player1->settings(300,100,0);
+    player1->settings(400,100,0);
     entities.push_back(player1);
     Player *player2 = new Player(2);
-    player2->settings(600,100,0);
+    player2->settings(100,100,0);
     entities.push_back(player2);
     Texture t[3];
     t[0].setSmooth(true);
@@ -42,14 +53,79 @@ int main(){
             if (e.type == Event::Closed)
                 app.close();
 
-            if (e.type == Event::KeyPressed && e.key.code == Keyboard::Space){
+            //if (e.type == Event::KeyReleased && e.key.code == Keyboard::Space){
+            /*if (Keyboard::isKeyPressed(Keyboard::Space)){
                 Bullet *b = new Bullet();
                 b->settings(player1->x,player1->y,player1->angle);
                 b->sprite.setTexture(t[player1->n]);
                 b->n = player1->n;
                 entities.push_back(b);
+            }*/
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::W)){
+            player1->Up = true;
+            //data += "1,";
+        }
+        else{
+            player1->Up = false;
+            //data += "0,";
+        }
+        if (Keyboard::isKeyPressed(Keyboard::D)){
+            player1->Right = true;
+            //data += "1,";
+        }
+        else{
+            player1->Right = false;
+            //data += "0,";
+        }
+        if (Keyboard::isKeyPressed(Keyboard::S)){
+            player1->Down = true;
+            //data += "1,";
+        }
+        else{
+            player1->Down = false;
+            //data += "0,";
+        }
+        if (Keyboard::isKeyPressed(Keyboard::A)){
+            player1->Left = true;
+            //data += "1,";
+        }
+        else{
+            player1->Left = false;
+            //data += "0,";
+        }
+
+        if (Keyboard::isKeyPressed(Keyboard::Space)){
+            Bullet *b = new Bullet();
+            b->settings(player1->x,player1->y,player1->angle);
+            b->sprite.setTexture(t[player1->n]);
+            b->n = player1->n;
+            entities.push_back(b);
+            //data += "1,";
+        }
+        //else data += "0,";
+
+        if (client.receive(buffer, 100, bytesRead) != Socket::Done)
+            std::cout << "Error rececive!" << std::endl;
+        else{
+            std::string s = buffer;
+            std::string delimiter = ",";
+            std::string opponent[5];
+            size_t pos = 0;
+            int i = 0;
+            std::string token;
+            while ((pos = s.find(delimiter)) != std::string::npos) {
+                token = s.substr(0, pos);
+                opponent[i] = token;
+                ++i;
+                s.erase(0, pos + delimiter.length());
             }
-            if (e.type == Event::KeyPressed && e.key.code == Keyboard::Enter){
+            player2->Up = std::stoi(opponent[0]);
+            player2->Right = std::stoi(opponent[1]);
+            player2->Down = std::stoi(opponent[2]);
+            player2->Left = std::stoi(opponent[3]);
+            if(std::stoi(opponent[4])){
                 Bullet *b = new Bullet();
                 b->settings(player2->x,player2->y,player2->angle);
                 b->sprite.setTexture(t[player2->n]);
@@ -57,24 +133,6 @@ int main(){
                 entities.push_back(b);
             }
         }
-
-        if (Keyboard::isKeyPressed(Keyboard::W)) player1->Up = true;
-        else player1->Up = false;
-        if (Keyboard::isKeyPressed(Keyboard::D)) player1->Right = true;
-        else player1->Right = false;
-        if (Keyboard::isKeyPressed(Keyboard::S)) player1->Down = true;
-        else player1->Down = false;
-        if (Keyboard::isKeyPressed(Keyboard::A)) player1->Left = true;
-        else player1->Left = false;
-
-        if (Keyboard::isKeyPressed(Keyboard::Up)) player2->Up = true;
-        else player2->Up = false;
-        if (Keyboard::isKeyPressed(Keyboard::Right)) player2->Right = true;
-        else player2->Right = false;
-        if (Keyboard::isKeyPressed(Keyboard::Down)) player2->Down = true;
-        else player2->Down = false;
-        if (Keyboard::isKeyPressed(Keyboard::Left)) player2->Left = true;
-        else player2->Left = false;
 
         for(auto a:entities)
             for(auto b:entities){
@@ -84,7 +142,7 @@ int main(){
                         b->life = 0;
                         if(a->life == 0){
                             a->settings(width/2, height/2, 0);
-                            a->life = 100;
+                            a->life = 1000;
                         }
                     }
             }
@@ -107,6 +165,7 @@ int main(){
             if (!dx && !dy) break;
         }
 
+        client.send(data.c_str(), data.length());
 
         app.draw(sBackground);
         for(auto i:entities)

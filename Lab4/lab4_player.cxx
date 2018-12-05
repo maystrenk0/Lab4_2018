@@ -50,7 +50,7 @@ void Player::drawHP(sf::RenderWindow &app){
     rectangle0.setFillColor(sf::Color::Red);
     rectangle0.setPosition(x, y-1.5*r);
     sf::RectangleShape rectangle1;
-    rectangle1.setSize(sf::Vector2f(0.7*life, 7));
+    rectangle1.setSize(sf::Vector2f(0.07*life, 7));
     rectangle1.setOrigin(sf::Vector2f(35, 3.5));
     rectangle1.setFillColor(sf::Color::Green);
     rectangle1.setPosition(x, y-1.5*r);
