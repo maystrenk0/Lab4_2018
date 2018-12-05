@@ -56,15 +56,6 @@ int main(){
         while (app.pollEvent(e)){
             if (e.type == Event::Closed)
                 app.close();
-
-            //if (e.type == Event::KeyReleased && e.key.code == Keyboard::Space){
-            /*if (Keyboard::isKeyPressed(Keyboard::Space)){
-                Bullet *b = new Bullet();
-                b->settings(player1->x,player1->y,player1->angle);
-                b->sprite.setTexture(t[player1->n]);
-                b->n = player1->n;
-                entities.push_back(b);
-            }*/
         }
 
         if (Keyboard::isKeyPressed(Keyboard::W)){
