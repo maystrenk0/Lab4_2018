@@ -19,7 +19,10 @@ int main(){
         std::cout << "Accept failed!" << std::endl;
     size_t bytesRead = 0;
     char buffer[100] = {};
-    std::string data = "Server message";
+
+
+    std::string data0 = "0,0,0,0,0,";
+    client.send(data0.c_str(), data0.length());
 
     RenderWindow app(VideoMode(width, height), "Lab4 SERVER");
 	app.setFramerateLimit(60);
@@ -48,6 +51,7 @@ int main(){
     player2->sprite.setTexture(t[0]);
 
     while (app.isOpen()){
+        std::string data = "";
         Event e;
         while (app.pollEvent(e)){
             if (e.type == Event::Closed)
@@ -65,35 +69,35 @@ int main(){
 
         if (Keyboard::isKeyPressed(Keyboard::W)){
             player1->Up = true;
-            //data += "1,";
+            data += "1,";
         }
         else{
             player1->Up = false;
-            //data += "0,";
+            data += "0,";
         }
         if (Keyboard::isKeyPressed(Keyboard::D)){
             player1->Right = true;
-            //data += "1,";
+            data += "1,";
         }
         else{
             player1->Right = false;
-            //data += "0,";
+            data += "0,";
         }
         if (Keyboard::isKeyPressed(Keyboard::S)){
             player1->Down = true;
-            //data += "1,";
+            data += "1,";
         }
         else{
             player1->Down = false;
-            //data += "0,";
+            data += "0,";
         }
         if (Keyboard::isKeyPressed(Keyboard::A)){
             player1->Left = true;
-            //data += "1,";
+            data += "1,";
         }
         else{
             player1->Left = false;
-            //data += "0,";
+            data += "0,";
         }
 
         if (Keyboard::isKeyPressed(Keyboard::Space)){
@@ -102,12 +106,12 @@ int main(){
             b->sprite.setTexture(t[player1->n]);
             b->n = player1->n;
             entities.push_back(b);
-            //data += "1,";
+            data += "1,";
         }
-        //else data += "0,";
+        else data += "0,";
 
         if (client.receive(buffer, 100, bytesRead) != Socket::Done)
-            std::cout << "Error rececive!" << std::endl;
+            std::cout << "Error receive!" << std::endl;
         else{
             std::string s = buffer;
             std::string delimiter = ",";
